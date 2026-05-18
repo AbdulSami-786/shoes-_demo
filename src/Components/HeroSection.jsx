@@ -1,256 +1,145 @@
-import React, { useState } from "react";
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { shoes } from '../data/shoes';
 
 const HeroSection = () => {
-  const shoes = [
-    {
-      id: 1,
-      title: "Nike Red Air",
-      price: "$149",
-      color: "from-red-500 to-red-700",
-      image: "./sho1.png",
-    },
+  const [activeShoe, setActiveShoe] = useState(shoes[0]);
+  const navigate = useNavigate();
 
-    {
-      id: 2,
-      title: "Golden Runner",
-      price: "$199",
-      color: "from-yellow-300 to-yellow-600",
-      image: "./sho2.png",
-    },
+  // Handle buying a shoe
+  const handleBuyNow = (shoeId) => {
+    navigate(`/checkout/${shoeId}`);
+  };
 
-    {
-      id: 3,
-      title: "Pink Street",
-      price: "$179",
-      color: "from-pink-400 to-pink-600",
-      image: "./sho3.png",
-    },
+  // Handle more info button
+  const handleMoreInfo = (shoeId) => {
+    navigate(`/product/${shoeId}`);
+  };
 
-    {
-      id: 4,
-      title: "Blue Motion",
-      price: "$159",
-      color: "from-cyan-400 to-blue-700",
-      image: "./sho4.png",
-    },
-  ];
-
-  const [activeShoe, setActiveShoe] = useState(shoes[1]);
+  // Handle sidebar shoe selection
+  const handleShoeSelect = (shoe) => {
+    setActiveShoe(shoe);
+    navigate(`/product/${shoe.id}`);
+  };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black text-white">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className={`absolute top-[-100px] left-[-100px] w-[500px] h-[500px] bg-gradient-to-r ${activeShoe.color} opacity-20 blur-[140px] rounded-full transition-all duration-1000`}
-        ></div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-purple-600 rounded-full filter blur-3xl opacity-10 animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-600 rounded-full filter blur-3xl opacity-10 animate-pulse delay-1000"></div>
 
-        <div
-          className={`absolute bottom-[-100px] right-[-100px] w-[500px] h-[500px] bg-gradient-to-r ${activeShoe.color} opacity-20 blur-[140px] rounded-full transition-all duration-1000`}
-        ></div>
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[90vh]">
+          
+          {/* Left sidebar - Shoe selection */}
+          <div className="lg:col-span-3 hidden lg:block">
+            <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/10">
+              <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Collection
+              </h3>
+              <div className="space-y-3">
+                {shoes.map((shoe) => (
+                  <button
+                    key={shoe.id}
+                    onClick={() => handleShoeSelect(shoe)}
+                    className={`w-full p-3 rounded-xl transition-all duration-300 ${
+                      activeShoe.id === shoe.id
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-500/30 scale-105'
+                        : 'bg-white/5 hover:bg-white/10'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={shoe.image}
+                        alt={shoe.name}
+                        className="w-10 h-10 object-cover rounded-lg"
+                      />
+                      <div className="text-left">
+                        <p className="text-sm font-semibold truncate">{shoe.name}</p>
+                        <p className="text-xs text-gray-400">${shoe.price}</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
 
-        {/* Smoke */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="smoke smoke1"></div>
-          <div className="smoke smoke2"></div>
-          <div className="smoke smoke3"></div>
+          {/* Main content - Active shoe display */}
+          <div className="lg:col-span-9">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              
+              {/* Shoe image */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl"></div>
+                <div className="relative rounded-3xl overflow-hidden aspect-square border border-white/10 shadow-2xl">
+                  <img
+                    src={activeShoe.image}
+                    alt={activeShoe.name}
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                  />
+                </div>
+              </div>
+
+              {/* Shoe details */}
+              <div className="space-y-6">
+                <div>
+                  <h1 className="text-4xl lg:text-6xl font-bold mb-3 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    {activeShoe.name}
+                  </h1>
+                  <p className="text-2xl font-semibold text-gray-300">
+                    ${activeShoe.price}
+                  </p>
+                </div>
+
+                <p className="text-gray-400 text-lg leading-relaxed">
+                  {activeShoe.description}
+                </p>
+
+                {/* Color options */}
+                <div className="flex gap-2">
+                  {activeShoe.colors.map((color, index) => (
+                    <div
+                      key={index}
+                      className="w-6 h-6 rounded-full border border-white/20 cursor-pointer hover:scale-110 transition-transform"
+                      style={{ backgroundColor: color }}
+                    ></div>
+                  ))}
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex flex-wrap gap-4">
+                  <button
+                    onClick={() => handleBuyNow(activeShoe.id)}
+                    className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold hover:shadow-lg hover:shadow-purple-500/30 hover:scale-105 transition-all duration-300"
+                  >
+                    Buy Now
+                  </button>
+                  <button
+                    onClick={() => handleMoreInfo(activeShoe.id)}
+                    className="px-8 py-3 bg-white/10 backdrop-blur-lg rounded-xl font-bold hover:bg-white/20 hover:scale-105 transition-all duration-300 border border-white/10"
+                  >
+                    More Info
+                  </button>
+                </div>
+
+                {/* Quick stats */}
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                  <div>
+                    <p className="text-gray-400 text-sm">Material</p>
+                    <p className="font-medium">{activeShoe.details.material}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm">Sole</p>
+                    <p className="font-medium">{activeShoe.details.sole}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* HERO */}
-      <section className="relative z-10 flex flex-col lg:flex-row items-center justify-between min-h-screen px-8 md:px-16 py-10">
-        {/* LEFT CONTENT */}
-        <div className="max-w-xl">
-          <h1 className="text-[90px] md:text-[140px] leading-[0.8] font-black uppercase text-white">
-            AIR
-          </h1>
-
-          <p className="text-gray-300 text-lg leading-relaxed mt-6 max-w-md">
-            Premium futuristic sneakers crafted with bold aesthetics,
-            next-generation comfort, and elite streetwear vibes.
-          </p>
-
-          {/* Buttons */}
-          <div className="flex gap-5 mt-10">
-            <button
-              className={`px-10 py-4 rounded-full bg-gradient-to-r ${activeShoe.color} text-black font-bold uppercase tracking-wider hover:scale-105 transition duration-300 shadow-[0_0_40px_rgba(250,204,21,0.4)]`}
-            >
-              Buy Now
-            </button>
-
-            <button className="px-10 py-4 rounded-full border border-white/40 text-white font-semibold uppercase tracking-wide hover:bg-white hover:text-black transition duration-300">
-              More Info
-            </button>
-          </div>
-
-          {/* Product Info */}
-          <div className="mt-12">
-            <p className="text-gray-400 uppercase tracking-[4px] text-sm">
-              Selected Shoe
-            </p>
-
-            <h2 className="text-4xl font-black mt-3">
-              {activeShoe.title}
-            </h2>
-
-            <p className="text-2xl mt-2 text-gray-300">
-              {activeShoe.price}
-            </p>
-          </div>
-        </div>
-
-        {/* CENTER SHOE */}
-        <div className="relative flex-1 flex items-center justify-center mt-20 lg:mt-0">
-          {/* Vertical Bars */}
-          <div className="absolute flex gap-5 z-0">
-            {[1, 2, 3, 4].map((item) => (
-              <div
-                key={item}
-                className={`w-[70px] md:w-[90px] h-[600px] bg-gradient-to-b ${activeShoe.color} opacity-90 rounded-sm transition-all duration-700`}
-              ></div>
-            ))}
-          </div>
-
-          {/* Shoe Glow */}
-          <div
-            className={`absolute w-[350px] h-[350px] md:w-[500px] md:h-[500px] rounded-full bg-gradient-to-r ${activeShoe.color} blur-[120px] opacity-30`}
-          ></div>
-
-          {/* Main Shoe */}
-          <img
-            key={activeShoe.id}
-            src={activeShoe.image}
-            alt={activeShoe.title}
-            className="relative z-20 
-            w-[340px] 
-            md:w-[620px] 
-            h-[220px] 
-            md:h-[420px] 
-            object-contain 
-            rotate-[-12deg] 
-            drop-shadow-[0_40px_80px_rgba(0,0,0,0.9)]
-            animate-shoe-enter
-            animate-float"
-          />
-
-          {/* Huge Text */}
-          <h1 className="absolute bottom-0 text-[120px] md:text-[220px] font-black text-white/5 uppercase tracking-[20px] z-0">
-            AIR
-          </h1>
-        </div>
-
-        {/* RIGHT SIDEBAR */}
-        <div className="hidden lg:flex flex-col items-center gap-6 border border-white/20 rounded-[50px] px-4 py-6 backdrop-blur-xl bg-white/5 shadow-[0_0_40px_rgba(255,255,255,0.05)]">
-          {shoes.map((shoe) => (
-            <button
-              key={shoe.id}
-              onClick={() => setActiveShoe(shoe)}
-              className={`w-[90px] h-[90px] rounded-full border flex items-center justify-center cursor-pointer transition-all duration-500 overflow-hidden
-              ${
-                activeShoe.id === shoe.id
-                  ? `border-yellow-400 bg-gradient-to-r ${shoe.color} shadow-[0_0_30px_rgba(250,204,21,0.6)] scale-110`
-                  : "border-white/20 bg-black/40 hover:border-yellow-400 hover:scale-105"
-              }`}
-            >
-              <img
-                src={shoe.image}
-                alt={shoe.title}
-                className="w-[65px] h-[65px] object-contain transition duration-300"
-              />
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* CUSTOM CSS */}
-      <style>
-        {`
-          /* FLOAT */
-          @keyframes float {
-            0% {
-              transform: translateY(0px) rotate(-12deg);
-            }
-
-            50% {
-              transform: translateY(-18px) rotate(-12deg);
-            }
-
-            100% {
-              transform: translateY(0px) rotate(-12deg);
-            }
-          }
-
-          .animate-float {
-            animation: float 5s ease-in-out infinite;
-          }
-
-          /* SMOOTH SHOE ENTRY */
-          @keyframes shoeEnter {
-            0% {
-              opacity: 0;
-              transform: translateY(-220px) scale(0.8) rotate(-20deg);
-              filter: blur(12px);
-            }
-
-            60% {
-              opacity: 1;
-              transform: translateY(20px) scale(1.03) rotate(-10deg);
-              filter: blur(0px);
-            }
-
-            100% {
-              opacity: 1;
-              transform: translateY(0px) scale(1) rotate(-12deg);
-              filter: blur(0px);
-            }
-          }
-
-          .animate-shoe-enter {
-            animation: shoeEnter 1s cubic-bezier(0.22, 1, 0.36, 1);
-          }
-
-          /* SMOKE */
-          .smoke {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(
-              circle,
-              rgba(255, 255, 255, 0.15),
-              transparent 70%
-            );
-            filter: blur(60px);
-          }
-
-          .smoke1 {
-            top: 10%;
-            left: 10%;
-            animation: smokeMove 15s infinite alternate ease-in-out;
-          }
-
-          .smoke2 {
-            top: 40%;
-            right: 5%;
-            animation: smokeMove 18s infinite alternate-reverse ease-in-out;
-          }
-
-          .smoke3 {
-            bottom: 0%;
-            left: 30%;
-            animation: smokeMove 20s infinite alternate ease-in-out;
-          }
-
-          @keyframes smokeMove {
-            0% {
-              transform: translate(0, 0) scale(1);
-            }
-
-            100% {
-              transform: translate(60px, -40px) scale(1.2);
-            }
-          }
-        `}
-      </style>
     </div>
   );
 };

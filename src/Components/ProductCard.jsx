@@ -1,9 +1,14 @@
 import React from 'react';
 import { Heart } from 'lucide-react'; // Using lucide-react for the heart icon
+import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ image, price, title, category, colors }) => {
+    const navigate = useNavigate();
+    const handleMoreInfo = (shoeId) => {
+    navigate(`/product/${shoeId}`);
+  };
   return (
-    <div className="group relative flex w-full max-w-[350px] flex-col bg-white font-sans cursor-pointer">
+    <div onClick={() => handleMoreInfo(1)} className="group relative flex w-full max-w-[350px] flex-col bg-white font-sans cursor-pointer">
       {/* Image Container */}
       <div className="relative aspect-square w-full bg-[#ebedee] flex items-center justify-center overflow-hidden">
         {/* Heart Icon */}
