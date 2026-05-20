@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HeroSection from './components/HeroSection';
-import ProductDetail from './pages/ProductDetail';
-import Checkout from './pages/Checkout';
+import HeroSection from './Components/HeroSection';
+import ProductDetail from './Pages/ProductDetail';
+import Checkout from './Pages/Checkout';
 import  Home from './Pages/Home';
 import Navbar from './Components/Navbar';
 import ShoeGallery from './Components/ShoeGallery';
